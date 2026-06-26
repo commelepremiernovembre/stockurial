@@ -67,7 +67,7 @@ export async function exportPDF(fiches: Fiche[], filename = 'stockurial') {
     const statut = STATUTS[f.statut]
     doc.setFontSize(9)
     doc.setTextColor(100)
-    doc.text(`${statut.emoji} ${statut.label}`, W - MARGIN, 17, { align:'right' })
+    doc.text(statut.label.toUpperCase(), W - MARGIN, 17, { align:'right' })
 
     y = 30
 
