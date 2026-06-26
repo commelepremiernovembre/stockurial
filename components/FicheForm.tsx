@@ -8,6 +8,7 @@ import { StatusBadge, StatusSelect } from './StatusBadge'
 interface Props {
   fiche?: Fiche | null
   onSave: (f: Fiche) => void
+  onDelete?: (id: string) => void
   onClose: () => void
 }
 
@@ -75,7 +76,7 @@ const SECTIONS = [
   },
 ]
 
-export function FicheForm({ fiche, onSave, onClose }: Props) {
+export function FicheForm({ fiche, onSave, onDelete, onClose }: Props) {
   const isNew = !fiche
 
   // Local photo state (base64 preview — pas encore uploadé)
@@ -203,6 +204,15 @@ export function FicheForm({ fiche, onSave, onClose }: Props) {
         saved.archived = true
       }
 
+      // Si "annulé" → supprimer définitivement
+      if (form.statut === 'annule') {
+        await logHistorique(saved.id, 'suppression')
+        await supabase.from('historique').delete().eq('fiche_id', saved.id)
+        await supabase.from('fiches').delete().eq('id', saved.id)
+        onDelete?.(saved.id)
+        return
+      }
+
       onSave(saved)
       showToast(isNew ? 'Fiche créée ✓' : 'Fiche mise à jour ✓')
     } catch (e: any) {
@@ -233,6 +243,11 @@ export function FicheForm({ fiche, onSave, onClose }: Props) {
           {form.statut === 'sorti' && (
             <div style={{marginTop:8, padding:'8px 12px', background:'#fff3cd', borderRadius:6, fontSize:12, color:'#8a6000'}}>
               ⚠️ La fiche sera archivée automatiquement à l'enregistrement.
+            </div>
+          )}
+          {form.statut === 'annule' && (
+            <div style={{marginTop:8, padding:'8px 12px', background:'#fde8e8', borderRadius:6, fontSize:12, color:'#c0392b'}}>
+              🗑 La fiche sera définitivement supprimée à l'enregistrement. Cette action est irréversible.
             </div>
           )}
         </div>

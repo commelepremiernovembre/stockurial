@@ -1,4 +1,4 @@
-export type Statut = 'incomplet' | 'receptionne' | 'photographie' | 'range' | 'sorti'
+export type Statut = 'incomplet' | 'receptionne' | 'photographie' | 'range' | 'sorti' | 'annule'
 
 export interface Fiche {
   id: string
@@ -40,4 +40,5 @@ export const STATUTS: Record<Statut, { label: string; emoji: string; color: stri
   photographie: { label: 'Photographié', emoji: '📸',  color: '#6a7fd4' },
   range:        { label: 'Rangé',        emoji: '📦',  color: '#2d8a5e' },
   sorti:        { label: 'Sorti',        emoji: '🚚',  color: '#c8a96e' },
+  annule:       { label: 'Annulé',       emoji: '🗑',  color: '#c0392b' },
 }

@@ -41,7 +41,6 @@ export default function Home() {
       if (idx >= 0) {
         const next = [...prev]
         next[idx] = f
-        // Si archivé (sorti) → retire de la liste active
         if (f.archived) return next.filter(x => x.id !== f.id)
         return next
       }
@@ -49,6 +48,12 @@ export default function Home() {
     })
     setModal(null)
     showToast(f.archived ? `Lot #${f.numero_lot} archivé (sorti)` : 'Fiche enregistrée ✓')
+  }
+
+  function handleDelete(id: string) {
+    setFiches(prev => prev.filter(x => x.id !== id))
+    setModal(null)
+    showToast('Fiche supprimée')
   }
 
   function toggleSelect(f: Fiche, checked: boolean) {
@@ -208,6 +213,7 @@ export default function Home() {
             <FicheForm
               fiche={modal === 'new' ? null : modal}
               onSave={handleSave}
+              onDelete={handleDelete}
               onClose={() => setModal(null)}
             />
           </div>

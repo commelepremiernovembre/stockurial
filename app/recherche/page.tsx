@@ -98,6 +98,12 @@ export default function Recherche() {
     setModal(null)
   }
 
+  function handleDelete(id: string) {
+    setFiches(prev => prev.filter(x => x.id !== id))
+    setResults(prev => prev ? prev.filter(x => x.id !== id) : prev)
+    setModal(null)
+  }
+
   const toggleSelect = (f: Fiche, checked: boolean) => {
     setSelected(prev => { const n = new Set(prev); checked ? n.add(f.id) : n.delete(f.id); return n })
   }
@@ -208,7 +214,7 @@ export default function Recherche() {
       {modal && (
         <div className="modal-bg" onClick={()=>setModal(null)}>
           <div className="modal" onClick={e=>e.stopPropagation()}>
-            <FicheForm fiche={modal} onSave={handleSave} onClose={()=>setModal(null)}/>
+            <FicheForm fiche={modal} onSave={handleSave} onDelete={handleDelete} onClose={()=>setModal(null)}/>
           </div>
         </div>
       )}
