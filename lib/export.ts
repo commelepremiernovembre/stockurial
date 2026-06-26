@@ -7,12 +7,12 @@ const fmt = (ts: string) =>
 export async function exportExcel(fiches: Fiche[], filename = 'stockurial') {
   const XLSX = await import('xlsx')
   const rows = fiches.map(f => ({
-    'N° Lot':       f.numero_lot    ?? '—',
-    'N° Dépôt':    f.numero_depot  ?? '—',
-    'N° Rack':     f.numero_rack   ?? '—',
-    'Description': f.description   ?? '—',
+    'N° Lot':       f.numero_lot    ?? '-',
+    'N° Dépôt':    f.numero_depot  ?? '-',
+    'N° Rack':     f.numero_rack   ?? '-',
+    'Description': f.description   ?? '-',
     'Statut':      STATUTS[f.statut]?.label ?? f.statut,
-    'Date dépôt':  f.date_depot ? fmt(f.date_depot) : '—',
+    'Date dépôt':  f.date_depot ? fmt(f.date_depot) : '-',
     'Créé le':     fmt(f.created_at),
     'Mis à jour':  fmt(f.updated_at),
     'Notes':       f.notes ?? '',
@@ -58,10 +58,10 @@ export async function exportPDF(fiches: Fiche[], filename = 'stockurial') {
     doc.setTextColor(240, 237, 230)
     doc.setFontSize(8)
     doc.setFont('helvetica', 'normal')
-    doc.text('ARTCURIAL — STOCKURIAL', MARGIN, 9)
+    doc.text('ARTCURIAL - STOCKURIAL', MARGIN, 9)
     doc.setFontSize(13)
     doc.setFont('helvetica', 'bold')
-    doc.text(`Lot #${f.numero_lot ?? '—'}`, MARGIN, 17)
+    doc.text(`Lot #${f.numero_lot ?? '-'}`, MARGIN, 17)
 
     // Statut
     const statut = STATUTS[f.statut]
@@ -77,13 +77,13 @@ export async function exportPDF(fiches: Fiche[], filename = 'stockurial') {
     doc.setFont('helvetica', 'bold')
 
     const infos = [
-      ['N° Lot',       f.numero_lot    ?? '—'],
-      ['N° Dépôt',    f.numero_depot  ?? '—'],
-      ['N° Rack',     f.numero_rack   ?? '—'],
-      ['Description', f.description   ?? '—'],
-      ['Date dépôt',  f.date_depot ? fmt(f.date_depot) : '—'],
+      ['N° Lot',       f.numero_lot    ?? '-'],
+      ['N° Dépôt',    f.numero_depot  ?? '-'],
+      ['N° Rack',     f.numero_rack   ?? '-'],
+      ['Description', f.description   ?? '-'],
+      ['Date dépôt',  f.date_depot ? fmt(f.date_depot) : '-'],
       ['Créé le',     fmt(f.created_at)],
-      ['Notes',       f.notes ?? '—'],
+      ['Notes',       f.notes ?? '-'],
     ]
 
     for (const [label, value] of infos) {

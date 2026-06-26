@@ -139,6 +139,18 @@ export function FicheForm({ fiche, onSave, onDelete, onClose }: Props) {
   async function handleSave() {
     setSaving(true)
     try {
+      // Annulé → suppression directe, sans écrire en DB
+      if (form.statut === 'annule') {
+        if (!isNew) {
+          await supabase.from('historique').delete().eq('fiche_id', fiche!.id)
+          await supabase.from('fiches').delete().eq('id', fiche!.id)
+          onDelete?.(fiche!.id)
+        } else {
+          onClose()
+        }
+        return
+      }
+
       const ficheId = fiche?.id ?? crypto.randomUUID()
       const updates: Partial<Fiche> = {
         statut:       form.statut,
@@ -202,15 +214,6 @@ export function FicheForm({ fiche, onSave, onDelete, onClose }: Props) {
         await supabase.from('fiches').update({ archived: true }).eq('id', saved.id)
         await logHistorique(saved.id, 'archivage', 'archived', 'false', 'true')
         saved.archived = true
-      }
-
-      // Si "annulé" → supprimer définitivement
-      if (form.statut === 'annule') {
-        await logHistorique(saved.id, 'suppression')
-        await supabase.from('historique').delete().eq('fiche_id', saved.id)
-        await supabase.from('fiches').delete().eq('id', saved.id)
-        onDelete?.(saved.id)
-        return
       }
 
       onSave(saved)
